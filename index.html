@@ -57,7 +57,7 @@
     display: block;
     backface-visibility: hidden;
   }
-  .scene.opened .env-flap { transform: rotateX(178deg); }
+  .scene.opened .env-flap { transform: rotateX(178deg); pointer-events: none; }
 
   /* ═══ CARD — behind envelope ═══ */
   .card {
@@ -550,7 +550,7 @@
 </head>
 <body>
 
-<div class="scene" id="scene" on="startOpen()">
+<div class="scene" id="scene" onclick="startOpen()">
 
   <!-- CARD behind envelope -->
   <div class="card" id="card">
@@ -582,11 +582,11 @@
         <div class="rule" style="margin:28px auto;"></div>
         <div class="msg-signature" id="msgSignature"></div>
         <div class="msg-nav" id="msgNav">
-          <button class="nav-btn" id="prevBtn" on="prevMessage(event)">
+          <button class="nav-btn" id="prevBtn" onclick="prevMessage(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <div class="nav-dots" id="navDots"></div>
-          <button class="nav-btn" id="nextBtn" on="nextMessage(event)">
+          <button class="nav-btn" id="nextBtn" onclick="nextMessage(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
@@ -660,6 +660,13 @@
 
 <script>
   let state = 'closed';
+
+  // Belt-and-suspenders: attach via JS as well (covers Safari quirks with inline handlers)
+  document.getElementById('scene').addEventListener('click', function() { startOpen(); });
+  document.getElementById('scene').addEventListener('touchend', function(e) {
+    e.preventDefault();
+    startOpen();
+  }, { passive: false });
 
   document.getElementById('closeBtn').addEventListener('click', function(e) {
     e.stopPropagation();
@@ -1160,7 +1167,7 @@
 
 <div id="loadingScreen">
   <div class="loading-title">Teresa  & Claudio </div>
-  <div class="loading-sub">Loading your invitation</div>
+  <div class="loading-sub">Loading your messages</div>
   <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
   <div class="loading-dots"><span></span><span></span><span></span></div>
 </div>
